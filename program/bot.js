@@ -154,7 +154,7 @@ We are all good!
     try {
         await Transaction.create({
             contract_address: config.contract.contract_address,
-            transfer_from_address: config.wallet.account, //actually we dont need this, but since already have this column
+            transfer_from_address: config.wallet.account, //actually we dont need this, but since already it, I will jus add in
             transfer_address: ctx.session.last_withdrawal_request_address,
             amount: user_amount,
             status: 'PROCESSING',
@@ -162,16 +162,17 @@ We are all good!
             updated_at: epochtime,
             is_delete: 0,
         }, { transaction: transaction })
-
         await transaction.commit();
         ctx.session.last_withdrawal_request_address = undefined;
         ctx.session.step = "idle";
         await ctx.reply(message4, { parse_mode: "HTML" });
     } catch (error) {
         await transaction.rollback();
+        ctx.session.last_withdrawal_request_address = undefined;
+        ctx.session.step = "idle";
+        await ctx.reply(`<strong>Something went wrong! Please try again later.</strong>`, { parse_mode: "HTML" });
+        return;
     }
-
-
 });
 //STEP 2 : WITHDRAWAL END
 
