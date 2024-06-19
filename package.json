@@ -4,15 +4,30 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "starto": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@ethereumjs/tx": "^5.3.0",
+    "@grammyjs/emoji": "^1.2.0",
+    "@grammyjs/router": "^2.0.0",
     "moment": "^2.30.1",
     "mysql2": "^3.10.0",
+    "nodemon": "^3.1.3",
     "sequelize": "^6.37.3",
-    "web3": "^4.9.0"
+    "ts-node": "^10.9.2",
+    "web3": "^4.9.0",
+    "web3-validator": "^2.0.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.4.0",
+    "@grammyjs/conversations": "^1.2.0",
+    "eslint": "^9.4.0",
+    "globals": "^15.4.0",
+    "grammy": "^1.24.1"
   }
 }

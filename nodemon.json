@@ -1,0 +1,10 @@
+{
+  "watch": [
+    "program"
+  ],
+  "ext": "js",
+  "ignore": [
+    "src/**/*.spec.js"
+  ],
+  "exec": "ts-node ./program/bot.js"
+}
