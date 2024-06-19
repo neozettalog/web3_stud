@@ -7,11 +7,14 @@ const { getCompleteNative, getCompleteERC20 } = require("./balance");
 const { emojiParser } = require('@grammyjs/emoji');
 const { Router } = require("@grammyjs/router");
 const bot = new Bot("7322853855:AAEl5SL_YTNuoQlwBUEYNbKAXCXiGM7nbt0");
+const { addReplyParam, autoQuote } = require("@roziscoding/grammy-autoquote");
 
 const allowList = [5482770289];
 
+
 const router_withdrawal = new Router((ctx) => ctx.session.step);
 bot.use(emojiParser());
+// bot.use(autoQuote());
 bot.use(session({ initial: () => ({ step: "idle" }) }));
 bot.use(router_withdrawal);
 
@@ -177,8 +180,10 @@ We are all good!
 //STEP 2 : WITHDRAWAL END
 
 
-
-bot.on("message", (ctx) => ctx.reply("Got your message!"));
+bot.on("message", async (ctx) => {
+    // ctx.api.config.use(addReplyParam(ctx));
+    await ctx.reply("Got your message!");
+});
 
 bot.start();
 
