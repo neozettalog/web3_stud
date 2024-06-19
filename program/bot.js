@@ -90,8 +90,6 @@ Can you provide me a wallet address that I can withdraw to?
     await ctx.reply(message1, { parse_mode: "HTML" });
 });
 
-
-
 //STEP 1 : WITHDRAWAL (get receiver address)
 const withdrawal = router_withdrawal.route("withdrawal");
 withdrawal.on("message:text", async (ctx) => {
@@ -119,8 +117,6 @@ Now, please provide the amount to withdraw (e.g 0.5)?
     await ctx.reply(message2, { parse_mode: "HTML" });
 });
 //STEP 1 : WITHDRAWAL END
-
-
 
 //STEP 2 : WITHDRAWAL (get amount)
 const withdrawal_step2 = router_withdrawal.route("withdrawal_step2");
@@ -180,9 +176,6 @@ We are all good!
     }
 });
 //STEP 2 : WITHDRAWAL END
-
-
-
 
 bot.on('message:photo', async (ctx) => {
     const photoArray = ctx.message.photo;
