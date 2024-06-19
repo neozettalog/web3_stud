@@ -14,6 +14,7 @@
   "dependencies": {
     "@ethereumjs/tx": "^5.3.0",
     "@grammyjs/emoji": "^1.2.0",
+    "@grammyjs/menu": "^1.2.1",
     "@grammyjs/router": "^2.0.0",
     "@roziscoding/grammy-autoquote": "^2.0.6",
     "moment": "^2.30.1",

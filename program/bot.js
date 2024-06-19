@@ -8,6 +8,8 @@ const { emojiParser } = require('@grammyjs/emoji');
 const { Router } = require("@grammyjs/router");
 const bot = new Bot("7322853855:AAEl5SL_YTNuoQlwBUEYNbKAXCXiGM7nbt0");
 const { addReplyParam, autoQuote } = require("@roziscoding/grammy-autoquote");
+const { Menu } = require("@grammyjs/menu");
+
 
 const allowList = [5482770289];
 
@@ -180,15 +182,43 @@ We are all good!
 //STEP 2 : WITHDRAWAL END
 
 
-bot.on("message", async (ctx) => {
-    // ctx.api.config.use(addReplyParam(ctx));
-    await ctx.reply("Got your message!");
+
+
+bot.on('message:photo', async (ctx) => {
+    const photoArray = ctx.message.photo;
+    console.log("Photo Array : ", photoArray);
+    const largestPhoto = photoArray[photoArray.length - 1];
+    console.log("Largest Photo : ", largestPhoto);
+    const fileId = largestPhoto.file_id;
+
+    // Acknowledge the receipt of the image
+    await ctx.reply('I received an image! So I will send you a message.');
+
+    // Optionally, get the file link (requires Telegram API call)
+    const file = await ctx.getFile();
+    console.log('File Data :', file);
+    const path = file.file_path;
+    console.log('File Path :', path);
+
+    await ctx.replyWithPhoto("https://grammy.dev/images/grammY.png");
 });
 
+bot.on('message', async (ctx) => {
+    await ctx.reply("Got your message!", {
+        reply_markup: {
+            force_reply: true
+        },
+    });
+});
+
+
+
+// bot.on("message", async (ctx) => {
+//     ctx.api.config.use(addReplyParam(ctx));
+//     await ctx.reply("Got your message! But we do not know what do you mean by this.");
+// });
+
 bot.start();
-
-
-
 
 
 
