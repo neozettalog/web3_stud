@@ -203,7 +203,10 @@ bot.on('message:photo', async (ctx) => {
     await ctx.replyWithPhoto("https://grammy.dev/images/grammY.png");
 });
 
+//Force user to quote reply my messag
 bot.on('message', async (ctx) => {
+    console.log(ctx);
+    console.log(ctx.message.reply_to_message)
     await ctx.reply("Got your message!", {
         reply_markup: {
             force_reply: true
@@ -211,8 +214,7 @@ bot.on('message', async (ctx) => {
     });
 });
 
-
-
+//Bot reply with Quote to user message
 // bot.on("message", async (ctx) => {
 //     ctx.api.config.use(addReplyParam(ctx));
 //     await ctx.reply("Got your message! But we do not know what do you mean by this.");
