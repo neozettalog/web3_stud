@@ -33,24 +33,29 @@ function getERC20Token(tokenAddress, address) {
 }
 
 async function getCompleteNative() {
-    const nativeBalance = await web3.eth.getBalance(config.contract.contract_address);
-    // console.log(nativeBalance)
+    try {
+        const nativeBalance = await web3.eth.getBalance(config.contract.token_address);
 
-    const formattedBalance = parseFloat(web3.utils.fromWei(nativeBalance, 'ether')).toFixed(1);
-    return formattedBalance
+        const formattedBalance = parseFloat(web3.utils.fromWei(nativeBalance, 'ether')).toFixed(1);
+        return formattedBalance
+    } catch (error) {
+        return null
+    }
+
 }
 
 async function getCompleteERC20() {
-    const contract = new web3.eth.Contract(abi, config.contract.token_address);
-    const erc20balance = await contract.methods.balanceOf(config.contract.contract_address).call()
-    // console.log(erc20balance);
-    const formattedBalance = parseFloat(web3.utils.fromWei(erc20balance, 'ether')).toFixed(1);
+    try {
+        const contract = new web3.eth.Contract(abi, config.contract.token_address);
+        const erc20balance = await contract.methods.balanceOf(config.contract.contract_address).call()
+        const formattedBalance = parseFloat(web3.utils.fromWei(erc20balance, 'ether')).toFixed(1);
 
-    return formattedBalance;
+        return formattedBalance;
+    } catch (error) {
+        return null
+    }
+
 }
-
-getNative(config.contract.contract_address);
-getERC20Token(config.contract.token_address, config.contract.contract_address);
 
 module.exports = {
     getCompleteNative,
@@ -73,6 +78,8 @@ module.exports = {
 
 
 
+// getNative(config.contract.contract_address);
+// getERC20Token(config.contract.token_address, config.contract.contract_address);
 
 
 
