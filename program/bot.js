@@ -10,7 +10,6 @@ const { Router } = require("@grammyjs/router");
 const bot = new Bot(config.bot.bot_key);
 const { addReplyParam, autoQuote } = require("@roziscoding/grammy-autoquote");
 
-
 async function findUserPendingTransactions(user_tele_id) {
     try {
         const transactions_data =
@@ -45,6 +44,7 @@ const labelDataPairs = [
 const buttonRow = labelDataPairs
     .map(([label, data]) => InlineKeyboard.text(label, data));
 const keyboard = InlineKeyboard.from([buttonRow]);
+const cancel_withdrawal_keyboard = new InlineKeyboard().text("Quit Withdrawal", "quit-withdrawal")
 
 
 bot.command("start", async (ctx) => {
@@ -144,15 +144,22 @@ We are sorry ${"grinning_face_with_sweat"}
         await ctx.answerCallbackQuery();
         return;
     }
-
     ctx.session.step = "withdrawal";
     const message1 = ctx.emoji`
 Sure! I can help you withdraw ${"smiling_face_with_smiling_eyes"}
 
 Can you provide me a wallet address that I can withdraw to?
 `;
+    await ctx.answerCallbackQuery();
+    await ctx.reply(message1, { parse_mode: "HTML", reply_markup: cancel_withdrawal_keyboard });
+});
 
-    await ctx.reply(message1, { parse_mode: "HTML" });
+bot.callbackQuery("quit-withdrawal", async (ctx) => {
+    ctx.session.last_withdrawal_request_address = undefined;
+    ctx.session.step = "idle";
+    await ctx.answerCallbackQuery();
+    await ctx.reply(ctx.emoji`Alright, you had quit the withdrawal process. ${"ok_hand"}`, { parse_mode: "HTML" });
+    return;
 });
 
 const withdrawal = router_withdrawal.route("withdrawal");
@@ -177,7 +184,7 @@ Now, please provide the amount (XCOIN) to withdraw (e.g 0.5)?
 
     ctx.session.last_withdrawal_request_address = address.toString();
     ctx.session.step = "withdrawal_step2";
-    await ctx.reply(message2, { parse_mode: "HTML" });
+    await ctx.reply(message2, { parse_mode: "HTML", reply_markup: cancel_withdrawal_keyboard });
 });
 
 const withdrawal_step2 = router_withdrawal.route("withdrawal_step2");
@@ -191,6 +198,7 @@ Oops! Amount provided must be number. ${"grinning_face_with_sweat"}
 
 Please provide a valid number for amount (e.g. 0.5, 10, 1.0).
         `;
+
     const message3 = ctx.emoji`
 Alright! I got all the details now. ${"star_struck"}
 I am helping you to submit your request.
@@ -203,6 +211,26 @@ We are all good!
     const user_amount = parseFloat(amount);
     if (!isNaN(user_amount) === false) {
         await ctx.reply(error_for_message2, { parse_mode: "HTML" });
+        return;
+    }
+
+    const erc_20_balance = await getCompleteERC20()
+    if (erc_20_balance === null) {
+        ctx.session.last_withdrawal_request_address = undefined;
+        ctx.session.step = "idle";
+        await ctx.reply(`<strong>Something went wrong! Please try again later.</strong>`, { parse_mode: "HTML" });
+        return;
+    }
+
+    if (erc_20_balance < user_amount) {
+        const error_for_message3 = ctx.emoji`
+Oops! Sufficient balance (XCOIN) for withdrawal. ${"grinning_face_with_sweat"}
+Current available balance to withdrawal : ${erc_20_balance}
+
+Please provide a sufficient amount for withdrawal.
+        `;
+
+        await ctx.reply(error_for_message3, { parse_mode: "HTML" });
         return;
     }
 
@@ -260,13 +288,12 @@ bot.on('message:photo', async (ctx) => {
 bot.on('message', async (ctx) => {
     // console.log(ctx.message.reply_to_message)
 
-    const message = `
-Here's the message
+    //     const message = `
+    // Here's the message
 
-<blockquote>Testing message with quote</blockquote>
-`;
-
-    await ctx.reply(message, {
+    // <blockquote>Testing message with quote</blockquote>
+    // `;
+    await ctx.reply("Got your message!", {
         parse_mode: "HTML",
         reply_markup: {
             // force_reply: true
