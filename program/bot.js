@@ -112,12 +112,12 @@ ${"down_arrow"} ${"down_arrow"} ${"down_arrow"} ${"down_arrow"}
 
 Working Address
 ==============
-${"link"} : <i>${config.contract.contract_address}</i>
+${"link"} : <i>${config.approve_transfer.account_3}</i>
 ${"dollar_banknote"} : ${native_balance} SEI
 
 Withdrawal Contract
 ==================
-${"link"} : <i>${config.contract.token_address}</i>
+${"link"} : <i>${config.contract.contract_address}</i>
 ${"dollar_banknote"} : ${erc_20_balance} XCOIN
 `;
 
@@ -230,7 +230,7 @@ Current available balance to withdrawal : ${erc_20_balance}
 Please provide a sufficient amount for withdrawal.
         `;
 
-        await ctx.reply(error_for_message3, { parse_mode: "HTML" });
+        await ctx.reply(error_for_message3, { parse_mode: "HTML", reply_markup: cancel_withdrawal_keyboard });
         return;
     }
 
@@ -282,6 +282,16 @@ bot.on('message:photo', async (ctx) => {
     console.log('File Path :', path);
 
     await ctx.replyWithPhoto("https://grammy.dev/images/grammY.png");
+});
+
+
+bot.command('dice', async (ctx) => {
+    const message = await ctx.replyWithDice();
+    const diceValue = message.dice.value;
+    setTimeout(async function () {
+        await ctx.reply(`Dice Number is ${diceValue}`);
+        console.log(`Dice rolled: ${diceValue}`);
+    }, 3700)
 });
 
 //Force user to quote reply bot message

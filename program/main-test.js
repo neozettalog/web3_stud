@@ -80,7 +80,7 @@ async function processor(reentry = 0) {
 
                 //STEP 3. SEND SIGNED TRANSACTION
                 try {  //this try catch should be in the "on receipt". Technically, we could have just eliminate on receipt,
-                        //instead get the txHash and go to getTransaction / getReceipt to ensure everything, and do it in while loop
+                    //instead get the txHash and go to getTransaction / getReceipt to ensure everything, and do it in while loop
                     const receipt = await web3.eth.sendSignedTransaction(signed_tx.rawTransaction)
                         .on('receipt', async receipt => {
                             console.log("Receipt Data : ", receipt);
